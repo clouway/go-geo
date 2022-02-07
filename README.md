@@ -1,2 +1,2 @@
-# go-geojson
-GeoJson package for go. 
+# go-geo
+Geo package for go. 
