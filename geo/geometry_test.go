@@ -9,6 +9,19 @@ import (
 	geojson "github.com/paulmach/go.geojson"
 )
 
+func TestGreatCircleDistance(t *testing.T) {
+	p1 := &LatLng{Lat: 43.106318, Lng: 25.717501}
+	p2 := &LatLng{Lat: 43.102235, Lng: 25.711677}
+
+	distanceInKm := p1.GreatCircleDistance(p2)
+	distanceInMeters := int(distanceInKm * 1000)
+	want := 655
+
+	if distanceInMeters != want {
+		t.Errorf("unexpected distance:\n- want: %v\n-  got: %v", want, distanceInMeters)
+	}
+}
+
 func TestPointContains(t *testing.T) {
 	point := Point{
 		Coordinates: []float64{25.608530044555668, 43.07380969664719},

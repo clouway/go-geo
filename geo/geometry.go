@@ -1,8 +1,15 @@
 package geo
 
 import (
+	"math"
+
 	"github.com/golang/geo/s1"
 	"github.com/golang/geo/s2"
+)
+
+const (
+	// According to Wikipedia, the Earth's radius is about 6,371km
+	EARTH_RADIUS = 6371
 )
 
 // Geometry is a geometric shape that can be used to
@@ -16,6 +23,25 @@ type Geometry interface {
 type LatLng struct {
 	Lat float64
 	Lng float64
+}
+
+// GreatCircleDistance: Calculates the Haversine distance between two points in kilometers.
+// Original Implementation from: http://www.movable-type.co.uk/scripts/latlong.html
+func (p *LatLng) GreatCircleDistance(p2 *LatLng) float64 {
+	dLat := (p2.Lat - p.Lat) * (math.Pi / 180.0)
+	dLon := (p2.Lng - p.Lng) * (math.Pi / 180.0)
+
+	lat1 := p.Lat * (math.Pi / 180.0)
+	lat2 := p2.Lat * (math.Pi / 180.0)
+
+	a1 := math.Sin(dLat/2) * math.Sin(dLat/2)
+	a2 := math.Sin(dLon/2) * math.Sin(dLon/2) * math.Cos(lat1) * math.Cos(lat2)
+
+	a := a1 + a2
+
+	c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
+
+	return EARTH_RADIUS * c
 }
 
 type Point struct {
